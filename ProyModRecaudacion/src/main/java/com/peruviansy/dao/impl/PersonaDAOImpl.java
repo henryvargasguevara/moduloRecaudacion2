@@ -131,8 +131,8 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	
 	public void mostrarExcel(String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
 		Date fechaSeleccionada;
-		FacesMessage msg7=new FacesMessage("Empieza henry vargas");
- 		FacesContext.getCurrentInstance().addMessage(null,msg7);
+		//FacesMessage msg7=new FacesMessage("Empieza henry vargas");
+ 		//FacesContext.getCurrentInstance().addMessage(null,msg7);
 		String nom=null;
 		//paso 0. Definir una colección con nombres de las columnas a procesar
 		//considera que esto lo puedes leer de un archivo de configuración,
@@ -148,22 +148,22 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		final int filaNombresColumnas =0;
 		//url representa el nombre del archivo excel a subir
 	
-		FacesMessage msg8=new FacesMessage("Empieza grecia11111");
- 		FacesContext.getCurrentInstance().addMessage(null,msg8);
-		System.out.println("antes de abrir archivo con poi");
+		//FacesMessage msg8=new FacesMessage("Empieza grecia11111");
+ 		//FacesContext.getCurrentInstance().addMessage(null,msg8);
+		//System.out.println("antes de abrir archivo con poi");
 		File archivoExcel = new File(urll);
 		//abrir el archivo con POI
-		System.out.println("ABRIR ARCHIVO CON POI");
+		//System.out.println("ABRIR ARCHIVO CON POI");
 		try 
 		{
 		//Workbook workbook = WorkbookFactory.create(archivoExcel);
 	        FileInputStream fis = new FileInputStream(archivoExcel);	      
 	        HSSFWorkbook workbook = new HSSFWorkbook(fis);
 	    
-		System.out.println("se pudo archivo poi");
-		System.out.println("creaste excel woork book");
-	        FacesMessage msg9=new FacesMessage("Empieza henry vargas2222222");
- 		FacesContext.getCurrentInstance().addMessage(null,msg9);
+		//System.out.println("se pudo archivo poi");
+		//System.out.println("creaste excel woork book");
+	        //FacesMessage msg9=new FacesMessage("Empieza henry vargas2222222");
+ 		//FacesContext.getCurrentInstance().addMessage(null,msg9);
 		//ubicarse en la hoja donde vas a procesar
 		//si es la primera hoja, debes indicar 0
 		HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);
@@ -198,7 +198,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		       //el número de columna a leer
 		       //en este caso, solo se imprime el resultado
 		       //puedes reemplazar esto por la manera en que debas procesar la información
-			System.out.println("LLEGASTE A WHILE");
+			//System.out.println("LLEGASTE A WHILE");
 			 
 			   Persona pers=new Persona();
 			   LocalDate ff;
@@ -280,11 +280,11 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			   lstPersonas1.add(pers);
 		    }
 		  }//fin while	 
-		   FacesMessage msg2=new FacesMessage("Un ARCHIVO ..."+nom);
-	           FacesContext.getCurrentInstance().addMessage(null,msg2);
+		   //FacesMessage msg2=new FacesMessage("Un ARCHIVO ..."+nom);
+	          // FacesContext.getCurrentInstance().addMessage(null,msg2);
 		   this.lstPersonas=lstPersonas1;
-			 FacesMessage msg3=new FacesMessage(this.lstPersonas.get(1).getNombre());
- 		        FacesContext.getCurrentInstance().addMessage(null,msg3);
+			 //FacesMessage msg3=new FacesMessage(this.lstPersonas.get(1).getNombre());
+ 		        //FacesContext.getCurrentInstance().addMessage(null,msg3);
 		
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -329,8 +329,8 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		
 			System.out.println("'%"+t.getNombre()+"%'");
 			lista=(List<Persona>) q.getResultList();
-		 }else{
-			 Query q=em.createQuery("From Persona p where (p.nombre LIKE  :code) AND ( p.nombre LIKE :code1)"
+		 }else if(t.getNombre().equalsIgnoreCase("")&& (!t.getDependencia().equalsIgnoreCase(""))){
+			     Query q=em.createQuery("From Persona p where  ( p.nombre LIKE :code1)"
 						+ " AND (p.fecha BETWEEN :startDate AND :endDate)");
 					//Query q=em.createQuery("From Persona p where p.id = 363 ");
 					q.setParameter("code","%"+t.getNombre()+"%");
@@ -340,7 +340,19 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				
 					System.out.println("'%"+t.getNombre()+"%'");
 					lista=(List<Persona>) q.getResultList();
-		 }
+	         }
+		       else{
+			        Query q=em.createQuery("From Persona p where (p.nombre LIKE  :code) AND ( p.nombre LIKE :code1)"
+						+ " AND (p.fecha BETWEEN :startDate AND :endDate)");
+					//Query q=em.createQuery("From Persona p where p.id = 363 ");
+					q.setParameter("code","%"+t.getNombre()+"%");
+					q.setParameter("code1","%"+t.getDependencia()+"%");
+					q.setParameter("startDate",inicio);
+					q.setParameter("endDate",fin);
+				
+					System.out.println("'%"+t.getNombre()+"%'");
+					lista=(List<Persona>) q.getResultList();
+		            }
 		
 		//Persona p2=lista.get(0);
 		//System.out.println(p2.getNombre()+" / "+p2.getDependencia());
