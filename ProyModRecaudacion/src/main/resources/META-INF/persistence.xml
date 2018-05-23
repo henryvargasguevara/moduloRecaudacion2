@@ -1,0 +1,21 @@
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+	<persistence-unit name="PersonalPU"  >
+	  <class>com.peruviansy.model.Persona</class>  
+	 <!--<persistence-unit name="PersonalPU" transaction-type="JTA" >
+	  
+	    <jta-data-source>java:/PostgresDS</jta-data-source>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes> -->
+		
+	<properties>
+		   <property name="javax.persistence.schema-generation.database.action" value="none"></property>
+		    <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+		    <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-195-246-59.eu-west-1.compute.amazonaws.com:5432/davgi6f6rlkaqv"/>
+		    <property name="javax.persistence.jdbc.user" value="cuceumdyhwutnm"  /> 
+		    <property name="javax.persistence.jdbc.password" value="8db9f4648dc0391f7bf0c33cc94787bf3d3690d845409410b46df4b89fe68a3d" /> 
+		    
+		</properties>
+	</persistence-unit>
+</persistence>

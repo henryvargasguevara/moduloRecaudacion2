@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+     <h:outputScript name="script.js" library="js" />
+</h:head> 
+
+<body> 
+
+<h:form>
+
+ <ui:composition template="/WEB-INF/templates/plantilla.xhtml">
+
+    <ui:define name="content">
+    
+    Bienvenido a la pagina
+    
+    <p:commandButton value="Nuevo" />
+	
+		<p:dataTable id="dtPersonas" widgetVar="formatosTable" value="#{personaBean.lstPersonas}" var="per" rows="20"
+		 paginator="true"
+         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="5,10,15">>
+		
+		    <f:facet name="header">
+				<p:outputPanel>
+					<h:outputText value="Buscar:" />
+					<p:inputText id="globalFilter"
+						onkeyup="filterAdvanced('formatosTable', this);"
+						style="width:150px" placeholder="Ingrese una palabra" />
+				</p:outputPanel>
+			</f:facet>
+		
+			<p:column headerText="Moneda" filterBy="#{per.moneda}" filterMatchMode="contains" filterStyle="display:none">
+				<p:outputLabel value="#{per.moneda}" />
+			</p:column>
+
+			<p:column headerText="Dependencia" filterBy="#{per.dependencia}" filterMatchMode="contains" filterStyle="display:none">
+				<p:outputLabel value="#{per.dependencia}" />
+			</p:column>
+
+			<p:column headerText="Concepto" filterBy="#{per.concepto}" filterMatchMode="contains" filterStyle="display:none">
+				<p:outputLabel value="#{per.concepto}" />
+			</p:column>
+			
+			
+			<p:column headerText="Numero" filterBy="#{per.numero}" filterMatchMode="contains" filterStyle="display:none">
+			 <p:outputLabel value="#{per.numero}"/>
+			</p:column>
+			
+			<p:column headerText="Codigo" filterBy="#{per.codigo}" filterMatchMode="contains" filterStyle="display:none">
+			    	<p:outputLabel value="#{per.codigo}"/>
+			</p:column>
+			
+			<p:column headerText="Nombre" filterBy="#{per.nombre}" filterMatchMode="contains" filterStyle="display:none">
+			      <p:outputLabel value="#{per.nombre}"/>
+			</p:column>
+			
+			<p:column headerText="Importe" filterBy="#{per.importe}" filterMatchMode="contains" filterStyle="display:none">
+			     <p:outputLabel value="#{per.importe}" />
+			</p:column>
+			
+			<p:column headerText="Path" filterBy="#{per.url}"  filterMatchMode="contains" filterStyle="display:none">
+					<p:outputLabel value="#{per.url}"/>
+			</p:column>
+			
+			<p:column headerText="Fecha" filterBy="#{per.fecha}" filterMatchMode="contains" filterStyle="display:none">
+			      	<p:outputLabel value="#{per.fecha}"/>
+			</p:column>
+			
+		</p:dataTable>
+    	
+    	<p:dialog header="Nuevo" widgetVar="dlg1" minHeight="40" >
+    	   <h:outputText value="Resistance to PrimeFaces is futile" />
+    	</p:dialog>
+    
+    
+    </ui:define>
+
+</ui:composition>
+  
+
+
+</h:form>
+
+
+</body> 
+</html>

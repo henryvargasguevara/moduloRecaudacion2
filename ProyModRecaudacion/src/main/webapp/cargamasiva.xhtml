@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"> 
+
+<h:head>
+    <h:outputScript name="script.js" library="js"></h:outputScript>
+</h:head> 
+<body> 
+<ui:composition template="/WEB-INF/templates/plantilla.xhtml">
+
+	<ui:define name="content">
+	   
+
+	   <h:form id="frm" enctype="multipart/form-data">
+	
+	      <p:growl id="messages"  autoUpdate="true"  showDetail="true" />
+	    	 <h:panelGrid id="dta" columns="2">
+	    	 <p:outputLabel value=""/>
+	    	 <p:outputLabel value=""/>
+         	<o:inputFile value="#{personaBean.files}" directory="true"  label="Examinar" update="frm,dta,tabla"/>
+        	 <p:commandButton value="Upload" actionListener="#{personaBean.myFileUploadMasivo()}" ajax="false" disabled="false" 
+        	 update="tabla"/>
+        
+        	 </h:panelGrid>
+		   
+	 <p:dataTable id="tabla">
+	     <p:column headerText="url">
+	       <p:outputLabel value="#{personaBean.url2}"/>
+	     </p:column>
+	 </p:dataTable>
+
+     </h:form>
+	
+	
+
+	</ui:define>
+
+</ui:composition>
+
+</body> 
+</html>

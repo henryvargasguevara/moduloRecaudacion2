@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<h:outputScript name="script.js" library="js" />
+	<h:outputScript name="calendar.js" library="js" />
+	<h:outputStylesheet name="estilos.css" library="css" />
+</h:head>
+<body>
+	<ui:insert name="header">
+	
+		<h:form id="frmMenu">
+			<p:menubar autoDisplay="false" >
+				<p:menuitem icon="ui-icon-home" value="Inicio" action="index?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-person" value="Carga" action="cargar?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-document" value="Reporte" action="reportexApellidos?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-document" value="Carga Masiva" action="cargamasiva?faces-redirect=true"/>	
+			</p:menubar>
+										
+		</h:form>
+	</ui:insert>
+
+	<ui:insert name="content">
+
+	</ui:insert>
+
+	<ui:insert name="footer">
+			<div>Desarrollado por Grupo 1-MODULO DE RECAUDACIONES Ingenieria de Software UNMSM-FISI</div>
+			<div>Copyright © FISI, 2018. Todos los derechos reservados</div>
+			<div>
+				<a href="http://www.facebook.com/" target="_blank">Facebook</a>
+				<a href="http://www.youtube.com/" target="_blank">Youtube</a>
+				<a href="http://www.twitter.com/" target="_blank">Twitter</a>
+			</div>
+	</ui:insert>
+</body>
+</html>

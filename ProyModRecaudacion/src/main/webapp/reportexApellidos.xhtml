@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+
+</h:head> 
+<body> 
+
+
+
+ <ui:composition template="/WEB-INF/templates/plantilla.xhtml">
+
+    <ui:define name="content">
+     
+     <h:form>
+        <h:panelGrid id="grid" columns="2">
+      
+         <p:outputLabel value="Nombre"/>
+	     <p:inputText value="#{personaBean.nombre}" />
+		   
+         <p:outputLabel value="Apellido"/>
+	     <p:inputText value="#{personaBean.apellido}"/>
+	     
+	     <p:outputLabel value="Nro Transaccciones"/>
+	     <p:inputText value="#{personaBean.nro}" />
+	     
+	     <p:outputLabel value="Importe Total"/>
+	     <p:inputText value="#{personaBean.monto}" />
+	     
+	     <p:outputLabel value="Periodo"/>
+	     <p:outputLabel value=""/>
+	     
+	     <p:calendar value="#{personaBean.fechainicio}" />
+	     <p:calendar value="#{personaBean.fechafinal}" />
+	      
+	     <p:commandButton value="Consultar" actionListener="#{personaBean.listarxPersona()}" update="data,grid" />
+	     <p:commandButton value="Cancelar" immediate="true"/>	
+
+
+         </h:panelGrid>
+	    	<p:dataTable id="data" value="#{personaBean.lstPersonas}" var="per">
+		     <p:column headerText="Moneda">
+		    	<p:outputLabel  value="#{per.moneda}"/>
+	         </p:column>
+		
+		     <p:column headerText="Dependencia">
+		       <p:outputLabel value="#{per.dependencia}"/>
+		     </p:column>
+		    
+		     <p:column headerText="Concepto">
+		       <p:outputLabel value="#{per.concepto}"/>
+		     </p:column>
+
+			 <p:column headerText="Numero">
+		       <p:outputLabel value="#{per.numero}"/>
+		     </p:column>
+		    
+		     <p:column headerText="Codigo">
+		       <p:outputLabel value="#{per.codigo}"/>
+		     </p:column>
+		    
+		     <p:column headerText="Nombre">
+		      <p:outputLabel value="#{per.nombre}"/>
+		     </p:column>
+		    
+		     <p:column headerText="Importe">
+		       <p:outputLabel value="#{per.importe}"/>
+		     </p:column>
+		    
+             <p:column headerText="Fecha">
+		       <p:outputLabel value="#{per.fecha}"/>
+		    </p:column>
+		  
+		</p:dataTable>
+
+      </h:form>
+	
+    </ui:define>
+
+</ui:composition>
+
+</body> 
+</html>
