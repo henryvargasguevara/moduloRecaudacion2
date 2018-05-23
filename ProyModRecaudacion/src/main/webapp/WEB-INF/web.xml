@@ -37,12 +37,7 @@
   <welcome-file>index.xhtml</welcome-file>
  </welcome-file-list>
 	
-	 <multipart-config>
-   	 <location>/tmp</location>
-   	 <max-file-size>70428800</max-file-size>
-   	 <max-request-size>70428800</max-request-size>
-    	<file-size-threshold>70428800</file-size-threshold>
-	</multipart-config>
+	 
  
  <filter>
      <filter-name>PrimeFaces FileUpload Filter</filter-name>
