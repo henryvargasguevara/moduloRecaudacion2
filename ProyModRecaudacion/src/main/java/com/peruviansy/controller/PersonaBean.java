@@ -279,7 +279,7 @@ public class PersonaBean implements Serializable{
 		
 		Persona per=new Persona();
 		per.setNombre("Henry Vargas");
-		System.out.println("wwwwwww"+this.url2);
+		//System.out.println("wwwwwww"+this.url2);
 		
 		service.registrar(per,this.url2);
 		
@@ -314,7 +314,7 @@ public class PersonaBean implements Serializable{
 		  }
 		  this.nro=lstPersonas.size();
 		  
-		  System.out.println(cal1.get(Calendar.MONTH)+"****"+cal.get(Calendar.MONTH));
+		  //System.out.println(cal1.get(Calendar.MONTH)+"****"+cal.get(Calendar.MONTH));
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
