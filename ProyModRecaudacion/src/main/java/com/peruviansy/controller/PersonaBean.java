@@ -1,21 +1,18 @@
 package com.peruviansy.controller;
 
 import java.io.BufferedReader;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import java.io.InputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import javax.servlet.http.Part;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -24,8 +21,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
-import org.omnifaces.util.Servlets;
-import org.omnifaces.util.Utils;
+import javax.servlet.http.Part;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -33,6 +29,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.omnifaces.util.Servlets;
+import org.omnifaces.util.Utils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -45,6 +43,7 @@ import com.peruviansy.service.Impl.PersonaServiceImpl;
 public class PersonaBean implements Serializable{
 	
 	private List<Persona> lstPersonas=new ArrayList<Persona>();
+	private List<Persona> lstReporte=new ArrayList<Persona>();
 	private String url=new String();
 	private String url2=new String();
 	
@@ -65,13 +64,14 @@ public class PersonaBean implements Serializable{
 	@Inject
 	private IPersonaService service;
 	private UploadedFile file;
-
+	
 	
 	@PostConstruct
 	public void init() 
-	{     nombre=new String();
+	{     this.lstReporte.clear();
+	      nombre=new String();
 	      this.apellido=new String();
-	    	this.listar();
+	      this.listar();
 	}
 	  
     public void listar()
@@ -93,16 +93,29 @@ public class PersonaBean implements Serializable{
     	}
     }
 
-   	 public List<Part> getFiles() {
+    
+    //GETTERS Y SETTERS
+    
+    
+    
+	public String getUrl2() {
+		return url2;
+	}
+
+	public List<Persona> getLstReporte() {
+		return lstReporte;
+	}
+
+	public void setLstReporte(List<Persona> lstReporte) {
+		this.lstReporte = lstReporte;
+	}
+
+	public List<Part> getFiles() {
 		return files;
 	}
 
 	public void setFiles(List<Part> files) {
 		this.files = files;
-	}
-	
-	public String getUrl2() {
-		return url2;
 	}
 
 	public void setUrl2(String url2) {
@@ -198,59 +211,82 @@ public class PersonaBean implements Serializable{
 	        this.url=file.getFileName();
 	    }
 	  
+	  public void convertirMayusculas()
+	  {   this.apellido=this.apellido.toUpperCase();
+		  
+	  }
+	  
+	  public void convertirNombreMayusculas() {
+			// TODO Auto-generated method stub
+		  this.nombre=this.nombre.toUpperCase();
+		}
+	  
 	  public void myFileUpload() throws IOException {
 		 
 		  File file2 = new File(file.getFileName());  
 	      // System.out.println(file2.getCanonicalPath()); 
 	      //System.out.println(file2.getPath()); 
-	      //System.out.println(file2.getAbsoluteFile()); 
-		 System.out.println("****"+file.getFileName()); 
-		 InputStream fi=file.getInputstream();
-		 OutputStream out=new FileOutputStream(file.getFileName());
-                 byte[] cont=Utils.toByteArray(file.getInputstream());
-                 out.write(cont);
+	     // System.out.println(file.getFileName()); 
+		  //InputStream fi=file.getInputstream();
+		 // OutputStream out=new FileOutputStream(file.getFileName());
+         // byte[] cont=Utils.toByteArray(file.getInputstream());
+         // out.write(cont);
+		  InputStream content=file.getInputstream();
+		  OutputStream out=new FileOutputStream("D:/"+file.getFileName());
+          byte[] cont=Utils.toByteArray(content);
+          out.write(cont);
+          out.close();
+          content.close();
 		  
 		  this.url=this.file.getFileName()  ;
 		  this.url2=this.url;
 		  //ServletContext servletContext=(ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext();
-		 // this.url2=servletContext.getRealPath("")+File.separator+"upload"+File.separator+this.url;
-		  //FacesMessage msg=new FacesMessage("Succesful"+this.url+" is Uploaded");
-		  //FacesContext.getCurrentInstance().addMessage(null,msg);
+		  // this.url2=servletContext.getRealPath("")+File.separator+"upload"+File.separator+this.url;
+		  
 		  //System.out.println(this.url2);
 		  registrar();
+		  File fichero = new File("D:/"+file.getFileName());
+
+			  if (fichero.delete())
+		        System.out.println("El fichero ha sido borrado satisfactoriamente"+file.getFileName());
+			  else
+		        System.out.println("El fichero no pudó ser borrado"+file.getFileName());
+			  
 		  
+		  //FacesMessage msg=new FacesMessage("Succesful"+this.url+" is Uploaded");
+		  //FacesContext.getCurrentInstance().addMessage(null,msg);
 	  }
 	  
 	  public void myFileUploadMasivo() throws IOException, EncryptedDocumentException, InvalidFormatException 
-	  {String namefile="";
+	  {   String namefile="";
 		  
 		  
 		  try {
 			    if (files != null) {
-			        for (Part file : files) {
-			            namefile = Servlets.getSubmittedFileName(file);
-			            String type = file.getContentType();
-			            long size = file.getSize();
-			            InputStream content = file.getInputStream();
+			        for (Part file1 : files) {
+			            namefile = Servlets.getSubmittedFileName(file1);
+			            String type = file1.getContentType();
+			            long size = file1.getSize();
+			            InputStream content = file1.getInputStream();
 			            //System.out.println("HOLA HENRY");
 			            //System.out.println(name);
 			            // System.out.println(type);
 			            //File archivoExcel = new File("D:/"+namefile);
 			  		    //abrir el archivo con POI
-					InputStream fi=file.getInputStream();
-				 OutputStream out=new FileOutputStream(namefile);
-                		 byte[] cont=Utils.toByteArray(content);
-                		 out.write(cont);
-					out.close();
-					content.close();
-					  
+			            InputStream fi=file1.getInputStream();
+			  		    OutputStream out=new FileOutputStream("D:/"+namefile);
+			            byte[] cont=Utils.toByteArray(content);
+			            out.write(cont);
+			            out.close();
+			            content.close();
 			            
 			  		 // if(archivoExcel.exists()) 
 			  		     this.url2=namefile;
 			  			 
 			  			  //System.out.println(this.url2);
 			  			  registrar();	
-					File fichero = new File("D:/"+namefile);
+			  			  
+			  			  File fichero = new File("D:/"+namefile);
 
 			  			  if (fichero.delete())
 			  		        System.out.println("El fichero ha sido borrado satisfactoriamente"+namefile);
@@ -271,7 +307,6 @@ public class PersonaBean implements Serializable{
 	public void registrar() 
 	{
 		try {
-			
 		//Calendar cal=Calendar.getInstance();
 		//cal.setTime(fechaSeleccionada);
 		
@@ -279,7 +314,6 @@ public class PersonaBean implements Serializable{
 		
 		Persona per=new Persona();
 		per.setNombre("Henry Vargas");
-		//System.out.println("wwwwwww"+this.url2);
 		
 		service.registrar(per,this.url2);
 		
@@ -294,29 +328,46 @@ public class PersonaBean implements Serializable{
 		try {
 		  this.monto=0;
 		  Persona per=new Persona();
-	     
-		  per.setNombre(this.nombre);
+		  System.out.println("******fechainicio*"+fechainicio);
+		  if(!this.apellido.equalsIgnoreCase("") && apellido!=null)
+	        this.convertirMayusculas();
+		  if(!this.nombre.equalsIgnoreCase("") && nombre!=null)
+		        this.convertirNombreMayusculas();
+		  
+	      per.setNombre(this.nombre);
 		  per.setDependencia(this.apellido);
-		  
+		  System.out.println("******fechainicio*"+fechainicio);
 		  Calendar cal= Calendar.getInstance();
-		  cal.setTime(fechainicio);
-		  fechainicio1=LocalDate.of(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH));
-		  
-		  Calendar cal1=Calendar.getInstance(); 
-		  cal1.setTime(fechafinal);
-		  fechafinal1=LocalDate.of(cal1.get(Calendar.YEAR),cal1.get(Calendar.MONTH)+1,cal1.get(Calendar.DAY_OF_MONTH));
-		  
-		  //List<Persona> lst=new ArrayList<>();
-		  //this.lstPersonas=lst;
-		  this.lstPersonas= service.listarxPersona(per,fechainicio1,this.fechafinal1);
-		  for(Persona p : lstPersonas) {
-			  monto=monto+p.getImporte();
+		  if(fechainicio!=null) 
+		  {
+		     cal.setTime(fechainicio);
+		     fechainicio1=LocalDate.of(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH));
 		  }
-		  this.nro=lstPersonas.size();
+		  else {
+			  fechainicio1=null;
+		  }
+		  Calendar cal1=Calendar.getInstance(); 
 		  
-		  //System.out.println(cal1.get(Calendar.MONTH)+"****"+cal.get(Calendar.MONTH));
-		}catch(Exception e) {
+		  if(fechafinal!=null)
+		  {
+			  cal1.setTime(fechafinal);
+			  fechafinal1=LocalDate.of(cal1.get(Calendar.YEAR),cal1.get(Calendar.MONTH)+1,cal1.get(Calendar.DAY_OF_MONTH));
+		  }
+		  else 
+		  {
+			  fechafinal1=null;
+		  }
+		  List<Persona> lst=new ArrayList<Persona>();
+		  this.lstReporte=lst;
+		  this.lstReporte= service.listarxPersona(per,fechainicio1,this.fechafinal1);
+	  
+		}catch(Exception e) 
+		  {
 			System.out.println(e.getMessage());
-		}
+		  }
 	}
+
+	
 }
+
+	
