@@ -155,7 +155,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		//System.out.println(url2.substring(22,24));
 		List<Persona> lstPersonas1=new ArrayList<Persona>();
 		//EL ARCHIVO ELEGIDO AL CARGAR DEBE ENCONTRARSE EN ESTE CAMINO O PATH
-		File archivoExcel = new File("D:/"+urll);
+		File archivoExcel = new File(urll);
 		
 		//abrir el archivo con POI
 		 //System.out.println("abrir archivo poi");
