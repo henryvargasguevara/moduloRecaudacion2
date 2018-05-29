@@ -232,7 +232,7 @@ public class PersonaBean implements Serializable{
          // byte[] cont=Utils.toByteArray(file.getInputstream());
          // out.write(cont);
 		  InputStream content=file.getInputstream();
-		  OutputStream out=new FileOutputStream("D:/"+file.getFileName());
+		  OutputStream out=new FileOutputStream(file.getFileName());
           byte[] cont=Utils.toByteArray(content);
           out.write(cont);
           out.close();
@@ -245,7 +245,7 @@ public class PersonaBean implements Serializable{
 		  
 		  //System.out.println(this.url2);
 		  registrar();
-		  File fichero = new File("D:/"+file.getFileName());
+		  File fichero = new File(file.getFileName());
 
 			  if (fichero.delete())
 		        System.out.println("El fichero ha sido borrado satisfactoriamente"+file.getFileName());
@@ -274,7 +274,7 @@ public class PersonaBean implements Serializable{
 			            //File archivoExcel = new File("D:/"+namefile);
 			  		    //abrir el archivo con POI
 			            InputStream fi=file1.getInputStream();
-			  		    OutputStream out=new FileOutputStream("D:/"+namefile);
+			       OutputStream out=new FileOutputStream(namefile);
 			            byte[] cont=Utils.toByteArray(content);
 			            out.write(cont);
 			            out.close();
@@ -286,7 +286,7 @@ public class PersonaBean implements Serializable{
 			  			  //System.out.println(this.url2);
 			  			  registrar();	
 			  			  
-			  			  File fichero = new File("D:/"+namefile);
+			  			  File fichero = new File(namefile);
 
 			  			  if (fichero.delete())
 			  		        System.out.println("El fichero ha sido borrado satisfactoriamente"+namefile);
