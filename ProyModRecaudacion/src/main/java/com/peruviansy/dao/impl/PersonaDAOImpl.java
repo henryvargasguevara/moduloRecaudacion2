@@ -131,8 +131,10 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	
 	public void mostrarExcel(String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
 		Date fechaSeleccionada;
-		//FacesMessage msg7=new FacesMessage("Empieza henry vargas");
- 		//FacesContext.getCurrentInstance().addMessage(null,msg7);
+		String extension="";
+	    XSSFRow row1;
+		FacesMessage msg=new FacesMessage("empiezaaa");
+ 		FacesContext.getCurrentInstance().addMessage(null,msg);
 		String nom=null;
 		//paso 0. Definir una colección con nombres de las columnas a procesar
 		//considera que esto lo puedes leer de un archivo de configuración,
@@ -147,68 +149,84 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		//variable con 0.
 		final int filaNombresColumnas =0;
 		//url representa el nombre del archivo excel a subir
-	
-		//FacesMessage msg8=new FacesMessage("Empieza grecia11111");
- 		//FacesContext.getCurrentInstance().addMessage(null,msg8);
-		//System.out.println("antes de abrir archivo con poi");
-		File archivoExcel = new File(urll);
+		//String url2=urll.toString();
+		//System.out.println(url2.substring(16,18));
+		//System.out.println(url2.substring(19,21));
+		//System.out.println(url2.substring(22,24));
+		List<Persona> lstPersonas1=new ArrayList<Persona>();
+		//EL ARCHIVO ELEGIDO AL CARGAR DEBE ENCONTRARSE EN ESTE CAMINO O PATH
+		File archivoExcel = new File("D:/"+urll);
+		
 		//abrir el archivo con POI
-		//System.out.println("ABRIR ARCHIVO CON POI");
+		 //System.out.println("abrir archivo poi");
+		String string =urll;
+		String[] parts = string.split("-");
+		//System.out.println("antesss..."+parts.length);
+		//System.out.println( parts[2]+"***"+parts[2].substring(3, 5));
+	
+	    //System.out.println(parts.length);
+		//String part1 = parts[1]; // 123
+		//System.out.println(parts[2].length());
+		if(parts[2].length()<7)
+		extension =parts[2].substring(3, 6); // 654321
+		else
+			extension=parts[2].substring(3,7);
+		
+		//System.out.println("aaa..."+extension+"/////"+parts[2].substring(3, 5));
+	
 		try 
 		{
-		//Workbook workbook = WorkbookFactory.create(archivoExcel);
-	        FileInputStream fis = new FileInputStream(archivoExcel);	      
-	        HSSFWorkbook workbook = new HSSFWorkbook(fis);
+			
+		//Workbook workbook = WorkbookFactory.create(archivoExcel);	
+		FileInputStream fis = new FileInputStream(archivoExcel);
 	    
-		//System.out.println("se pudo archivo poi");
-		//System.out.println("creaste excel woork book");
-	        //FacesMessage msg9=new FacesMessage("Empieza henry vargas2222222");
- 		//FacesContext.getCurrentInstance().addMessage(null,msg9);
+		if(extension.equalsIgnoreCase("xls")) 
+		{
+		  System.out.println("***"+extension);
+	      HSSFWorkbook workbook = new HSSFWorkbook(fis);
+	    
+		
 		//ubicarse en la hoja donde vas a procesar
 		//si es la primera hoja, debes indicar 0
-		HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);
+		//HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);	
+		HSSFSheet sheet = workbook.getSheetAt(0);
 		//acceder a la fila con los nombres de las columnas
 		Row row = (  sheet).getRow(filaNombresColumnas);
 		//paso 3.
 		//utilizando el poder de Java 8
-		 Iterator<Cell> cellIterator = row.cellIterator();
+
+	    Iterator<Cell> cellIterator = row.cellIterator();
 	  
 		while ( cellIterator.hasNext()) {	
-			HSSFCell cell = (HSSFCell) cellIterator.next();
+			  HSSFCell cell = (HSSFCell) cellIterator.next();
 			  String valorCelda = cell.getStringCellValue().trim();
 			   //System.out.println(valorCelda);
-			  // System.out.println(cell.getColumnIndex());
+			   //System.out.println(cell.getColumnIndex());
 			   if (!valorCelda.isEmpty()) 
 			    {
 			        mapNombresColumnas.put(valorCelda, cell.getColumnIndex());
 			    }
-		
 		}
 		//paso 4.
 		//se asume que los valores para procesar se encuentran en la fila
 		//siguiente a la fila donde están los nombres de las columnas
 		int indiceDatos = filaNombresColumnas + 1;
 		Row filaDatos = null;
-		List<Persona> lstPersonas1=new ArrayList<Persona>();
+		
 		//recorrer todas las filas con datos
-			System.out.println("VAS  ENTRAR A WHILE");
 		while ((filaDatos = ((org.apache.poi.ss.usermodel.Sheet) sheet).getRow(indiceDatos++)) != null) {
 		    //se procesan solo las celdas en base a los "nombres" de esas columnas
 		       //el resultado de mapNombresColumnas.get(col) es
 		       //el número de columna a leer
 		       //en este caso, solo se imprime el resultado
 		       //puedes reemplazar esto por la manera en que debas procesar la información
-			//System.out.println("LLEGASTE A WHILE");
 			 
 			   Persona pers=new Persona();
 			   LocalDate ff;
 			 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
 			   pers.setUrl(urll);
 			   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
-			  // System.out.println("***"+monedaa);
-				
 			   pers.setMoneda(monedaa.substring(0,3));
-			   //System.out.println(monedaa.substring(0,3));
 			   pers.setDependencia(filaDatos.getCell(mapNombresColumnas.get("DEPENDENCIA"))+"");
 			   String concep=(filaDatos.getCell(mapNombresColumnas.get("CONCEP"))+"");
 			   //System.out.println(concep);
@@ -267,7 +285,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				                  }
 
 			   pers.setCodigo(codigoo);
-			   nom=filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"";
+			   nom = filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"";
 			   pers.setNombre(filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"");
 			   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 			   String fechaa=urll;
@@ -276,20 +294,145 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			  
 			   pers.setFecha(ff);
 		       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
-		    		//   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
+		       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
 			   lstPersonas1.add(pers);
 		    }
-		  }//fin while	 
-		   //FacesMessage msg2=new FacesMessage("Un ARCHIVO ..."+nom);
-	          // FacesContext.getCurrentInstance().addMessage(null,msg2);
-		   this.lstPersonas=lstPersonas1;
-			 //FacesMessage msg3=new FacesMessage(this.lstPersonas.get(1).getNombre());
- 		        //FacesContext.getCurrentInstance().addMessage(null,msg3);
+		  }
+		  workbook.close();
 		
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.getCause());
 		}
+		else 
+		{   System.out.println("XSSF"+extension);
+		    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+		    
+			
+			//ubicarse en la hoja donde vas a procesar
+			//si es la primera hoja, debes indicar 0
+			//HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);	
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			//acceder a la fila con los nombres de las columnas
+			Row row = (  sheet).getRow(filaNombresColumnas);
+			//paso 3.
+			//utilizando el poder de Java 8
+
+		    Iterator<Cell> cellIterator = row.cellIterator();
+		  
+			while ( cellIterator.hasNext()) {	
+				  XSSFCell cell = (XSSFCell) cellIterator.next();
+				  String valorCelda = cell.getStringCellValue().trim();
+				   //System.out.println(valorCelda);
+				   //System.out.println(cell.getColumnIndex());
+				   if (!valorCelda.isEmpty()) 
+				    {
+				        mapNombresColumnas.put(valorCelda, cell.getColumnIndex());
+				    }
+			}
+			//paso 4.
+			//se asume que los valores para procesar se encuentran en la fila
+			//siguiente a la fila donde están los nombres de las columnas
+			int indiceDatos = filaNombresColumnas + 1;
+			Row filaDatos = null;
+	
+			//recorrer todas las filas con datos
+			while ((filaDatos = ((org.apache.poi.ss.usermodel.Sheet) sheet).getRow(indiceDatos++)) != null) {
+			    //se procesan solo las celdas en base a los "nombres" de esas columnas
+			       //el resultado de mapNombresColumnas.get(col) es
+			       //el número de columna a leer
+			       //en este caso, solo se imprime el resultado
+			       //puedes reemplazar esto por la manera en que debas procesar la información
+				 
+				   Persona pers=new Persona();
+				   LocalDate ff;
+				 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
+				   pers.setUrl(urll);
+				   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
+				   pers.setMoneda(monedaa.substring(0,3));
+				   pers.setDependencia(filaDatos.getCell(mapNombresColumnas.get("DEPENDENCIA"))+"");
+				   String concep=(filaDatos.getCell(mapNombresColumnas.get("CONCEP"))+"");
+				   //System.out.println(concep);
+				   pers.setConcepto(concep.substring(0,6)); 
+				   String nume=filaDatos.getCell(mapNombresColumnas.get("NUMERO"))+"";
+	               String numeroo="";
+				   
+				   if(nume.substring(1,2).equals(".") && nume.length()==3) {
+					   
+				   }
+				   else if(numeroo.length()==9)
+	                      {   
+					       numeroo=nume.substring(0,7);
+					      }
+					   else  if(nume.length()==11)
+	                         {   
+					           numeroo=nume.substring(0,1)+nume.substring(2,9);
+					         }
+					         else if(nume.length()==10) 
+					              {
+					        	    numeroo=nume.substring(0,1)+nume.substring(2,8);
+					              }
+					              else if(nume.length()==7) 
+					                   {
+					            	    numeroo=nume.substring(0,5);
+					                   }
+					                  else if(nume.length()==8) {
+					                	  numeroo=nume.substring(0,6);
+					                  }
+				   pers.setNumero(numeroo);
+				   String codi=filaDatos.getCell(mapNombresColumnas.get("CODIGO"))+"";
+				   String codigoo="";
+				   
+				   if(codi.substring(1,2).equals(".")&&codi.length()==3) {
+				
+					  // pers.setCodigo();
+				   }
+				   else if(codi.length()==9)
+	                      {   
+					       codigoo=codi.substring(0,7); 
+					      }
+					   else  if(codi.length()==11)
+	                         {   
+					           codigoo=codi.substring(0,1)+codi.substring(2,9);
+					         }
+					         else if(codi.length()==10) 
+					              {
+					        	   codigoo=codi.substring(0,1)+codi.substring(2,8);
+					              }
+					              else if(codi.length()==7) 
+					                   {
+					            	    codigoo=codi.substring(0,5);
+					                   }
+					                  else if(codi.length()==8) {
+					                	  codigoo=codi.substring(0,6);
+					                  }
+
+				   pers.setCodigo(codigoo);
+				   nom = filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"";
+				   pers.setNombre(filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"");
+				   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
+				   String fechaa=urll;
+				   
+	               ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));
+				  
+				   pers.setFecha(ff);
+			       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
+			       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
+				   lstPersonas1.add(pers);
+			    }
+			  }
+			  workbook.close();
+   
+		   }
+		//FacesMessage msg2=new FacesMessage("almacenado.."+nom);
+ 		//FacesContext.getCurrentInstance().addMessage(null,msg2);
+	
+		   this.lstPersonas=lstPersonas1;
+		   
+		  // FacesMessage msg3=new FacesMessage(this.lstPersonas.get(1).getNombre());
+	 	  // FacesContext.getCurrentInstance().addMessage(null,msg3);
+		   
+		}catch(Exception e) {
+			System.out.println(e.getMessage()+"****");
+			System.out.println(e.getCause()+"dao.impl");
+		  }
 		}
 
 	
