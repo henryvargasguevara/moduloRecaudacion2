@@ -458,7 +458,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		String queryString =
 		"from Item item where item.description like :search";
 		*/
-		List<Persona> lista =new ArrayList<>();
+		List<Persona> lista =new ArrayList<Persona>();
 		//BUSQUEDA POR FECHAS O INTERVALO
 		if( t.getNombre().equalsIgnoreCase("") && t.getDependencia().equalsIgnoreCase("") && inicio !=null && fin !=null) {
 			
@@ -546,6 +546,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		return lista;
 	
 	}
+}
 
 	
 
