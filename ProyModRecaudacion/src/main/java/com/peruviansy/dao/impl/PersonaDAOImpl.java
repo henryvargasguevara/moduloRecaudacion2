@@ -451,16 +451,16 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 
 	@Override
 	public List<Persona> listarxPersona(Persona t,LocalDate inicio,LocalDate fin) throws Exception 
-	 { /* There are two approaches to parameter binding: using positional or using
+	{  /* There are two approaches to parameter binding: using positional or using
 		named parameters. Hibernate and Java Persistence support both options, but you
-		cant use both at the same time for a particular query.
+		can’t use both at the same time for a particular query.
 		With named parameters, you can rewrite the query as
 		String queryString =
 		"from Item item where item.description like :search";
 		*/
-		
-		List<Persona> lista =new ArrayList<Persona>();
-		if(t.getNombre().equalsIgnoreCase("")&&t.getDependencia().equalsIgnoreCase("")) {
+		List<Persona> lista =new ArrayList<>();
+		//BUSQUEDA POR FECHAS O INTERVALO
+		if( t.getNombre().equalsIgnoreCase("") && t.getDependencia().equalsIgnoreCase("") && inicio !=null && fin !=null) {
 			
 			Query q=em.createQuery("From Persona p where "
 				+ " (p.fecha BETWEEN :startDate AND :endDate)");
@@ -469,38 +469,81 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			//q.setParameter("code1","%"+t.getDependencia()+"%");
 			q.setParameter("startDate",inicio);
 			q.setParameter("endDate",fin);
+			System.out.println("//BUSQUEDA POR FECHAS ");
+			System.out.println("'%"+fin.toString()+"%'");
+			lista=(List<Persona>) q.getResultList(); 
+		}
 		
-			System.out.println("'%"+t.getNombre()+"%'");
-			lista=(List<Persona>) q.getResultList();
-		 }else if(t.getNombre().equalsIgnoreCase("")&& (!t.getDependencia().equalsIgnoreCase(""))){
-			     Query q=em.createQuery("From Persona p where  ( p.nombre LIKE :code1)"
+	  else { //BUSQUEDA POR FECHAS Y APELLIDO
+		     if(t.getNombre().equalsIgnoreCase("")&& !t.getDependencia().equalsIgnoreCase("") && inicio!=null && fin !=null)
+		     {
+			        Query q=em.createQuery("From Persona p where  ( p.nombre LIKE :code1)"
 						+ " AND (p.fecha BETWEEN :startDate AND :endDate)");
 					//Query q=em.createQuery("From Persona p where p.id = 363 ");
-					q.setParameter("code","%"+t.getNombre()+"%");
+					//q.setParameter("code","%"+t.getNombre()+"%");
 					q.setParameter("code1","%"+t.getDependencia()+"%");
 					q.setParameter("startDate",inicio);
 					q.setParameter("endDate",fin);
-				
-					System.out.println("'%"+t.getNombre()+"%'");
+					System.out.println("//BUSQUEDA POR FECHAS Y APELLIDO");
+					System.out.println("'% FECHASSSSSS"+t.getNombre()+"%'");
 					lista=(List<Persona>) q.getResultList();
-	         }
-		       else{
+		    }
+		    else
+		    {  //BUSQUEDA POR FECHA, APELLIDO Y NOMBRE
+			  if(!t.getNombre().equalsIgnoreCase("")&& !t.getDependencia().equalsIgnoreCase("") && inicio!=null && fin !=null) 
+			  {
 			        Query q=em.createQuery("From Persona p where (p.nombre LIKE  :code) AND ( p.nombre LIKE :code1)"
 						+ " AND (p.fecha BETWEEN :startDate AND :endDate)");
 					//Query q=em.createQuery("From Persona p where p.id = 363 ");
-					q.setParameter("code","%"+t.getNombre()+"%");
+					//q.setParameter("code","%"+t.getNombre()+"%");
+			        System.out.println("BUSQUEDA POR FECHA, APELLIDO Y NOMBRE");
+			        q.setParameter("code","%"+t.getNombre()+"%");
 					q.setParameter("code1","%"+t.getDependencia()+"%");
 					q.setParameter("startDate",inicio);
 					q.setParameter("endDate",fin);
 				
-					System.out.println("'%"+t.getNombre()+"%'");
-					lista=(List<Persona>) q.getResultList();
-		            }
+					//System.out.println("'%"+t.getNombre()+"%'");
+					lista=(List<Persona>) q.getResultList();	
+			  }
+			  else 
+				  //BUSQUEDA POR APELLIDO Y NOMBRE
+			  {  if(!t.getNombre().equalsIgnoreCase("")&& !t.getDependencia().equalsIgnoreCase("") && inicio==null && fin ==null) 
+			     {
+				  		Query q=em.createQuery("From Persona p where (p.nombre LIKE  :code) AND ( p.nombre LIKE :code1)");
+						//Query q=em.createQuery("From Persona p where p.id = 363 ");
+						//q.setParameter("code","%"+t.getNombre()+"%");
+				        System.out.println("BUSQUEDA POR APELLIDO Y NOMBRE");
+						q.setParameter("code","%"+t.getNombre()+"%");
+						q.setParameter("code1","%"+t.getDependencia()+"%");
+						//q.setParameter("startDate",inicio);
+						//q.setParameter("endDate",fin);					
+						lista=(List<Persona>) q.getResultList();
+			  
+			     }else 
+			     {
+			    	 //BUSQUEDA POR SOLO APELLIDO
+			    	 if(t.getNombre().equalsIgnoreCase("")&& !t.getDependencia().equalsIgnoreCase("") && inicio==null && fin ==null) 
+			    	 {
+			    		    Query q=em.createQuery("From Persona p where ( p.nombre LIKE :code1)");
+							//Query q=em.createQuery("From Persona p where p.id = 363 ");
+							//q.setParameter("code","%"+t.getNombre()+"%");
+					        System.out.println("BUSQUEDA POR SOLO APELLIDO ");
+							//q.setParameter("code","%"+t.getNombre()+"%");
+							q.setParameter("code1","%"+t.getDependencia()+"%");
+							//q.setParameter("startDate",inicio);
+							//q.setParameter("endDate",fin);					
+							lista=(List<Persona>) q.getResultList(); 
+			    	 }
+			    	 		    	 
+			     }
+			  
+			  }
+		   }
+	  }
 		
 		//Persona p2=lista.get(0);
 		//System.out.println(p2.getNombre()+" / "+p2.getDependencia());
 		return lista;
-	  }
 	
 	}
 
