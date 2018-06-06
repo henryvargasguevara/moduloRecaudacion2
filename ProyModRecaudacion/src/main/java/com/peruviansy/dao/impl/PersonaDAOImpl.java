@@ -130,11 +130,9 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	}
 	
 	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
-		Date fechaSeleccionada;
-		
-	    XSSFRow row1;
-		FacesMessage msg=new FacesMessage("empiezaaa");
- 		FacesContext.getCurrentInstance().addMessage(null,msg);
+Date fechaSeleccionada;
+		//String extension="";
+	    XSSFRow row1;	
 		String nom=null;
 		//paso 0. Definir una colección con nombres de las columnas a procesar
 		//considera que esto lo puedes leer de un archivo de configuración,
@@ -161,8 +159,19 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		 //System.out.println("abrir archivo poi");
 		String string =urll;
 		String[] parts = string.split("-");
-		
+		System.out.println("antesss..."+extension);
+		//System.out.println( parts[2]+"***"+parts[2].substring(3, 5));
 	
+	    //System.out.println(parts.length);
+		//String part1 = parts[1]; // 123
+		//System.out.println(parts[2].length());
+		/*if(parts[2].length()<7)
+		extension =parts[2].substring(3, 6); // 654321
+		else
+			extension=parts[2].substring(3,7);
+		
+		//System.out.println("aaa..."+extension+"/////"+parts[2].substring(3, 5));
+	*/
 		try 
 		{
 			
@@ -171,18 +180,10 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	    
 		if(extension.equalsIgnoreCase("application/vnd.ms-excel")) 
 		{
-		  System.out.println("***"+extension);
-	          HSSFWorkbook workbook = new HSSFWorkbook(fis);
-	    
-		
-		//ubicarse en la hoja donde vas a procesar
-		//si es la primera hoja, debes indicar 0
-		//HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);	
+		System.out.println("ingreso: "+extension);
+	    HSSFWorkbook workbook = new HSSFWorkbook(fis);
 		HSSFSheet sheet = workbook.getSheetAt(0);
-		//acceder a la fila con los nombres de las columnas
 		Row row = (  sheet).getRow(filaNombresColumnas);
-		//paso 3.
-		//utilizando el poder de Java 8
 
 	    Iterator<Cell> cellIterator = row.cellIterator();
 	  
@@ -275,25 +276,29 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 
 			   pers.setCodigo(codigoo);
 			   nom = filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"";
+	
 			   pers.setNombre(filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"");
 			   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 			   String fechaa=urll;
-		           String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
-			   System.out.println(anio.length()+"****"+anio);
+			   String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
 			   //HAY QUE VALIDAR FECHA
 			   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
-		
+               //ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));		
 			   pers.setFecha(ff);
 		       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 		       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
 			   lstPersonas1.add(pers);
+		      }
 		    }
-		  }
-		  workbook.close();
+		    workbook.close();
+		    FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
+		 	FacesContext.getCurrentInstance().addMessage(null,msg2);
 		
-		}
-		else 
-		{   System.out.println("XSSF"+extension);
+		 }
+	  else
+		  { 
+		    if(extension.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+		    {   System.out.println("XSSF"+extension);
 		    XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		    
 			
@@ -340,7 +345,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				   pers.setMoneda(monedaa.substring(0,3));
 				   pers.setDependencia(filaDatos.getCell(mapNombresColumnas.get("DEPENDENCIA"))+"");
 				   String concep=(filaDatos.getCell(mapNombresColumnas.get("CONCEP"))+"");
-				   //System.out.println(concep);
+				
 				   pers.setConcepto(concep.substring(0,6)); 
 				   String nume=filaDatos.getCell(mapNombresColumnas.get("NUMERO"))+"";
 	               String numeroo="";
@@ -401,9 +406,9 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 				   String fechaa=urll;
 				   String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
-			   System.out.println(anio.length()+"****"+anio);
-			   //HAY QUE VALIDAR FECHA
-			   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
+				 //HAY QUE VALIDAR FECHA
+				   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
+				  
 				   pers.setFecha(ff);
 			       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 			       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
@@ -411,34 +416,28 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			    }
 			  }
 			  workbook.close();
+			  FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
+		 	  FacesContext.getCurrentInstance().addMessage(null,msg2);
    
-		   }
-		//FacesMessage msg2=new FacesMessage("almacenado.."+nom);
- 		//FacesContext.getCurrentInstance().addMessage(null,msg2);
+		    }
+		    else{
+		    	FacesMessage msg2=new FacesMessage("Extension no permitida..."+extension);
+		 		FacesContext.getCurrentInstance().addMessage(null,msg2);
+		    	
+		    	}
+		 }//FIN DE ELSE
+		
 	
 		   this.lstPersonas=lstPersonas1;
 		   
-		  // FacesMessage msg3=new FacesMessage(this.lstPersonas.get(1).getNombre());
-	 	  // FacesContext.getCurrentInstance().addMessage(null,msg3);
+		
 		   
 		}catch(Exception e) {
-			System.out.println("ERROR..");
+			System.out.println("ERRORRRR");
 			System.out.println(e.getMessage()+"****");
 			System.out.println(e.getCause()+"dao.impl");
 		  }
-		}
 
-	
-	@Override
-	public Persona ListarPorId(Persona t) throws Exception {
-		List<Persona> lista=new ArrayList<Persona>();
-		Query q=em.createQuery("FROM Persona p where p.id = ?");
-		q.setParameter(1,t.getId());
-		lista=(List<Persona>) q.getResultList();
-		
-		Persona per=lista != null && !lista.isEmpty() ? lista.get(0) : new Persona();
-	
-		return per;
 	  }
 
 
