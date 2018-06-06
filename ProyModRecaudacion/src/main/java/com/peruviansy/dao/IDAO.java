@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IDAO<T> {
 
-	void registrar(T t,String url) throws Exception;
+	void registrar(String extension,String url) throws Exception;
 	void modificar(T t) throws Exception;
 	List<T> listar() throws Exception;
 	T ListarPorId(T t) throws Exception;
