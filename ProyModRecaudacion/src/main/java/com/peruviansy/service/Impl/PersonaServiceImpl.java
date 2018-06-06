@@ -33,9 +33,9 @@ public class PersonaServiceImpl implements IPersonaService,Serializable{
 	
 	
 	@Override
-	public void registrar(Persona per,String url) throws Exception {
+	public void registrar(String extension,String url) throws Exception {
 		// llamamos a la capa DAO,
-		dao.registrar(per,url);
+		dao.registrar(extension,url);
 	}
 
 
