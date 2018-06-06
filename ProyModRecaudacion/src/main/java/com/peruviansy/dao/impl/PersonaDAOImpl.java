@@ -72,9 +72,9 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	}*/
 	
 
-	public void registrar(Persona per,String url)  throws Exception{
+	public void registrar(String extension,String url)  throws Exception{
 		// TODO Auto-generated method stub
-		this.mostrarExcel(url);
+		this.mostrarExcel(extension,url);
 		String nom=null;
 		try {
 			
@@ -129,9 +129,9 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		return lista;
 	}
 	
-	public void mostrarExcel(String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
+	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
 		Date fechaSeleccionada;
-		String extension="";
+		
 	    XSSFRow row1;
 		FacesMessage msg=new FacesMessage("empiezaaa");
  		FacesContext.getCurrentInstance().addMessage(null,msg);
@@ -161,18 +161,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		 //System.out.println("abrir archivo poi");
 		String string =urll;
 		String[] parts = string.split("-");
-		//System.out.println("antesss..."+parts.length);
-		//System.out.println( parts[2]+"***"+parts[2].substring(3, 5));
-	
-	    //System.out.println(parts.length);
-		//String part1 = parts[1]; // 123
-		//System.out.println(parts[2].length());
-		if(parts[2].length()<7)
-		extension =parts[2].substring(3, 6); // 654321
-		else
-			extension=parts[2].substring(3,7);
 		
-		//System.out.println("aaa..."+extension+"/////"+parts[2].substring(3, 5));
 	
 		try 
 		{
@@ -180,10 +169,10 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		//Workbook workbook = WorkbookFactory.create(archivoExcel);	
 		FileInputStream fis = new FileInputStream(archivoExcel);
 	    
-		if(extension.equalsIgnoreCase("xls")) 
+		if(extension.equalsIgnoreCase("application/vnd.ms-excel")) 
 		{
 		  System.out.println("***"+extension);
-	      HSSFWorkbook workbook = new HSSFWorkbook(fis);
+	          HSSFWorkbook workbook = new HSSFWorkbook(fis);
 	    
 		
 		//ubicarse en la hoja donde vas a procesar
@@ -289,9 +278,11 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			   pers.setNombre(filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"");
 			   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 			   String fechaa=urll;
-			   
-               ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));
-			  
+		           String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
+			   System.out.println(anio.length()+"****"+anio);
+			   //HAY QUE VALIDAR FECHA
+			   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
+		
 			   pers.setFecha(ff);
 		       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 		       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
@@ -409,9 +400,10 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				   pers.setNombre(filaDatos.getCell(mapNombresColumnas.get("NOMBRE"))+"");
 				   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 				   String fechaa=urll;
-				   
-	               ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));
-				  
+				   String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
+			   System.out.println(anio.length()+"****"+anio);
+			   //HAY QUE VALIDAR FECHA
+			   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
 				   pers.setFecha(ff);
 			       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 			       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
@@ -430,6 +422,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	 	  // FacesContext.getCurrentInstance().addMessage(null,msg3);
 		   
 		}catch(Exception e) {
+			System.out.println("ERROR..");
 			System.out.println(e.getMessage()+"****");
 			System.out.println(e.getCause()+"dao.impl");
 		  }
