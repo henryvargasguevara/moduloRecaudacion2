@@ -455,7 +455,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	
 		@Override
 	public Persona ListarPorId(Persona t) throws Exception {
-		List<Persona> lista=new ArrayList<>();
+		List<Persona> lista=new ArrayList<Persona>();
 		Query q=em.createQuery("FROM Persona p where p.id = ?");
 		q.setParameter(1,t.getId());
 		lista=(List<Persona>) q.getResultList();
