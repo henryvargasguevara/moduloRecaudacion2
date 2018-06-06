@@ -232,7 +232,7 @@ public class PersonaBean implements Serializable{
 	  
 	  public void myFileUpload() throws IOException {
 		 
-		  File file2 = new File(file.getFileName());  
+		File file2 = new File(file.getFileName());  
 	      // System.out.println(file2.getCanonicalPath()); 
 	      //System.out.println(file2.getPath()); 
 	     // System.out.println(file.getFileName()); 
@@ -243,6 +243,10 @@ public class PersonaBean implements Serializable{
 		  InputStream content=file.getInputstream();
 		  OutputStream out=new FileOutputStream(file.getFileName());
 		  this.extension=file.getContentType();
+		  
+		 if(extension.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+				 extension.equalsIgnoreCase("application/vnd.ms-excel")) {
+		  //System.out.println("ggggggg   "+file.getContentType());
           byte[] cont=Utils.toByteArray(content);
           out.write(cont);
           out.close();
@@ -250,9 +254,7 @@ public class PersonaBean implements Serializable{
 		  
 		  this.url=this.file.getFileName()  ;
 		  this.url2=this.url;
-		  //ServletContext servletContext=(ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext();
-		  // this.url2=servletContext.getRealPath("")+File.separator+"upload"+File.separator+this.url;
-		  
+		  	  
 		  //System.out.println(this.url2);
 		  registrar();
 		  File fichero = new File(file.getFileName());
@@ -261,32 +263,38 @@ public class PersonaBean implements Serializable{
 		        System.out.println("El fichero ha sido borrado satisfactoriamente"+file.getFileName());
 			  else
 		        System.out.println("El fichero no pudó ser borrado"+file.getFileName());
-			  
-		  
-	          FacesMessage msg=new FacesMessage("Archivo cargado :"+this.url);
-		  FacesContext.getCurrentInstance().addMessage(null,msg);
+
+		  //FacesMessage msg=new FacesMessage("Extension :"+ extension);
+		  //FacesContext.getCurrentInstance().addMessage(null,msg);
+		 }else 
+		 {
+			  FacesMessage msg=new FacesMessage("Extension no permitida :"+ extension);
+			  FacesContext.getCurrentInstance().addMessage(null,msg);
+		 }
 	  }
 	  
 	  public void myFileUploadMasivo() throws IOException, EncryptedDocumentException, InvalidFormatException 
-	  {   String namefile="";
+	  {   
 		  
-		  
+		  String namefile="";
+	     
+		  int id=1;
 		  try {
 			    if (files != null) {
 			        for (Part file1 : files) {
-					Carpeta c=new Carpeta();
+			        	//SE TIENE QUE CREER UN NUEVO OBJETO EN EL FOR ,POR QUE SINO TODOS LOS OBJETOS
+			        	//REFERENCIAN AL ULTIMO ARCHIVO INGRESADO
+			        	Carpeta c=new Carpeta();
 			            namefile = Servlets.getSubmittedFileName(file1);
 			            this.extension = file1.getContentType();
-			            String type = file1.getContentType();
+			         
 			            long size = file1.getSize();
 			            InputStream content = file1.getInputStream();
-			            //System.out.println("HOLA HENRY");
-			            //System.out.println(name);
-			            // System.out.println(type);
-			            //File archivoExcel = new File("D:/"+namefile);
-			  		    //abrir el archivo con POI
+			          
+			   if(extension.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+			   				 extension.equalsIgnoreCase("application/vnd.ms-excel")) {
 			            InputStream fi=file1.getInputStream();
-			       OutputStream out=new FileOutputStream(namefile);
+			  		    OutputStream out=new FileOutputStream(namefile);
 			            byte[] cont=Utils.toByteArray(content);
 			            out.write(cont);
 			            out.close();
@@ -294,7 +302,8 @@ public class PersonaBean implements Serializable{
 			            
 			  		 // if(archivoExcel.exists()) 
 			  		     this.url2=namefile;
-			  	             c.setId(id);
+			  		     //System.out.println(id);
+			  		     c.setId(id);
 			  		     System.out.println(namefile);
 			  		     c.setNombre(namefile);
 			  		     c.setUrl(namefile);
@@ -306,15 +315,21 @@ public class PersonaBean implements Serializable{
 			  			  File fichero = new File(namefile);
 
 			  			  if (fichero.delete())
-			  		        System.out.println("El fichero ha sido borrado satisfactoriamente"+namefile);
+			  		          System.out.println("El fichero ha sido borrado satisfactoriamente"+namefile);
 			  			  else
-			  		        System.out.println("El fichero no pudó ser borrado"+namefile);
+			  		          System.out.println("El fichero no pudó ser borrado"+namefile);
 			  			  
 			  			  FacesMessage msg=new FacesMessage("Archivo cargado "+this.url2);
 			  			  FacesContext.getCurrentInstance().addMessage(null,msg);
-			  		  
-			        }
-			    }
+			  			  id++;
+
+			     }else {
+			    	 FacesMessage msg=new FacesMessage("Extension no permitida :"+ extension);
+					  FacesContext.getCurrentInstance().addMessage(null,msg);
+			     }
+			        
+			   }
+			  }
 			 }catch(Exception e) {
 				 System.out.println(e.getMessage());
 			 } 
