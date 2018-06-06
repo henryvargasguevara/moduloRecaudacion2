@@ -130,7 +130,10 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	}
 	
 	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
-Date fechaSeleccionada;
+		
+		
+			Date fechaSeleccionada;
+		   LocalDate ff;
 		//String extension="";
 	    XSSFRow row1;	
 		String nom=null;
@@ -165,13 +168,8 @@ Date fechaSeleccionada;
 	    //System.out.println(parts.length);
 		//String part1 = parts[1]; // 123
 		//System.out.println(parts[2].length());
-		/*if(parts[2].length()<7)
-		extension =parts[2].substring(3, 6); // 654321
-		else
-			extension=parts[2].substring(3,7);
 		
-		//System.out.println("aaa..."+extension+"/////"+parts[2].substring(3, 5));
-	*/
+
 		try 
 		{
 			
@@ -212,7 +210,7 @@ Date fechaSeleccionada;
 		       //puedes reemplazar esto por la manera en que debas procesar la información
 			 
 			   Persona pers=new Persona();
-			   LocalDate ff;
+			   ff=LocalDate.of(2018,1,1);
 			 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
 			   pers.setUrl(urll);
 			   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
@@ -281,9 +279,18 @@ Date fechaSeleccionada;
 			   pers.setImporte(  Double.parseDouble((filaDatos.getCell(mapNombresColumnas.get("IMPORTE")).toString())));
 			   String fechaa=urll;
 			   String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
+			   //System.out.println(anio.length());
+			   //System.out.println(anio);
+			   //System.out.println(anio.substring(0, 1));
+			   //System.out.println(anio.substring(2, 5));
+			   //System.out.println(anio.substring(5, 7));
 			   //HAY QUE VALIDAR FECHA
-			   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
+			   if(anio.length()==11)
+			      ff=LocalDate.of(Integer.parseInt((String) (anio.substring(0, 1)+""+anio.substring(2, 5))),Integer.parseInt(anio.substring(5, 7)), Integer.parseInt((String) anio.substring(7, 9)));
                //ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));		
+			   else if(anio.length()==10)
+				   ff=LocalDate.of(Integer.parseInt((String) (anio.substring(0, 1)+""+anio.substring(2, 5))),Integer.parseInt(anio.substring(5, 7)), Integer.parseInt( ((String) (anio.substring(7, 8))+"0")));
+			   
 			   pers.setFecha(ff);
 		       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 		       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
@@ -338,7 +345,7 @@ Date fechaSeleccionada;
 			       //puedes reemplazar esto por la manera en que debas procesar la información
 				 
 				   Persona pers=new Persona();
-				   LocalDate ff;
+				   ff=LocalDate.of(2018, 1, 1);
 				 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
 				   pers.setUrl(urll);
 				   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
@@ -407,8 +414,14 @@ Date fechaSeleccionada;
 				   String fechaa=urll;
 				   String anio=filaDatos.getCell(mapNombresColumnas.get("FECHA")).toString();
 				 //HAY QUE VALIDAR FECHA
-				   ff=LocalDate.of(Integer.parseInt((String) (anio.subSequence(0, 1)+""+anio.subSequence(2,5))),Integer.parseInt((String) anio.subSequence(5,7)), Integer.parseInt((String) anio.subSequence(7, 9)));
-				  
+				   
+				      if(anio.length()==11)
+					      ff=LocalDate.of(Integer.parseInt((String) (anio.substring(0, 1)+""+anio.substring(2, 5))),Integer.parseInt(anio.substring(5, 7)), Integer.parseInt((String) anio.substring(7, 9)));
+		               //ff=LocalDate.of(Integer.parseInt("20"+fechaa.substring(22,24)),Integer.parseInt(fechaa.substring(19,21)),Integer.parseInt((fechaa.substring(16,18))));		
+					   else if(anio.length()==10)
+						   ff=LocalDate.of(Integer.parseInt((String) (anio.substring(0, 1)+""+anio.substring(2, 5))),Integer.parseInt(anio.substring(5, 7)), Integer.parseInt( ((String) (anio.substring(7, 8))+"0")));
+					   
+				 
 				   pers.setFecha(ff);
 			       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 			       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
