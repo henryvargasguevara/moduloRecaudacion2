@@ -33,7 +33,7 @@ import org.omnifaces.util.Servlets;
 import org.omnifaces.util.Utils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
+import com.peruviansy.model.Carpeta;
 import com.peruviansy.model.Persona;
 import com.peruviansy.service.IPersonaService;
 import com.peruviansy.service.Impl.PersonaServiceImpl;
