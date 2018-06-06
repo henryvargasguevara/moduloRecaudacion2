@@ -46,7 +46,7 @@ public class PersonaBean implements Serializable{
 	private List<Persona> lstReporte=new ArrayList<Persona>();
 	private String url=new String();
 	private String url2=new String();
-	
+	private String extension;
 	private List<Part> files;
 	private String nombre;
 	private String apellido;
@@ -57,6 +57,7 @@ public class PersonaBean implements Serializable{
 	private Date fechafinal;
 	private LocalDate fechainicio1;
 	private LocalDate fechafinal1;
+	private List<Carpeta> lstCarpeta=new ArrayList<Carpeta>();
 	
 	@Inject
 	private Persona persona;
@@ -95,6 +96,14 @@ public class PersonaBean implements Serializable{
 
     
     //GETTERS Y SETTERS
+	
+	public List<Carpeta> getLstCarpeta() {
+		return lstCarpeta;
+	}
+
+	public void setLstCarpeta(List<Carpeta> lstCarpeta) {
+		this.lstCarpeta = lstCarpeta;
+	}
     
     
     
@@ -233,6 +242,7 @@ public class PersonaBean implements Serializable{
          // out.write(cont);
 		  InputStream content=file.getInputstream();
 		  OutputStream out=new FileOutputStream(file.getFileName());
+		  this.extension=file.getContentType();
           byte[] cont=Utils.toByteArray(content);
           out.write(cont);
           out.close();
@@ -253,8 +263,8 @@ public class PersonaBean implements Serializable{
 		        System.out.println("El fichero no pudó ser borrado"+file.getFileName());
 			  
 		  
-		  //FacesMessage msg=new FacesMessage("Succesful"+this.url+" is Uploaded");
-		  //FacesContext.getCurrentInstance().addMessage(null,msg);
+	          FacesMessage msg=new FacesMessage("Archivo cargado :"+this.url);
+		  FacesContext.getCurrentInstance().addMessage(null,msg);
 	  }
 	  
 	  public void myFileUploadMasivo() throws IOException, EncryptedDocumentException, InvalidFormatException 
@@ -264,7 +274,9 @@ public class PersonaBean implements Serializable{
 		  try {
 			    if (files != null) {
 			        for (Part file1 : files) {
+					Carpeta c=new Carpeta();
 			            namefile = Servlets.getSubmittedFileName(file1);
+			            this.extension = file1.getContentType();
 			            String type = file1.getContentType();
 			            long size = file1.getSize();
 			            InputStream content = file1.getInputStream();
@@ -282,7 +294,12 @@ public class PersonaBean implements Serializable{
 			            
 			  		 // if(archivoExcel.exists()) 
 			  		     this.url2=namefile;
-			  			 
+			  	             c.setId(id);
+			  		     System.out.println(namefile);
+			  		     c.setNombre(namefile);
+			  		     c.setUrl(namefile);
+			  		     c.setTamano(size/1024);
+			  		     this.lstCarpeta.add(c);
 			  			  //System.out.println(this.url2);
 			  			  registrar();	
 			  			  
@@ -315,7 +332,7 @@ public class PersonaBean implements Serializable{
 		Persona per=new Persona();
 		per.setNombre("Henry Vargas");
 		
-		service.registrar(per,this.url2);
+		service.registrar(this.extension,this.url2);
 		
 	    }catch(Exception e) 
 		{
