@@ -39,7 +39,7 @@
 	     <p:calendar value="#{personaBean.fechafinal}" />
 	      
 	     <p:commandButton value="Consultar" actionListener="#{personaBean.listarxPersona()}" update="data,grid" />
-	     <p:commandButton value="Cancelar" immediate="true"/>	
+	      <p:commandButton value="Limpiar"  actionListener="#{personaBean.limpiar()}"  update="grid"/>		
 
 
          </h:panelGrid>
