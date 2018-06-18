@@ -74,6 +74,13 @@ public class PersonaBean implements Serializable{
 	      this.apellido=new String();
 	      this.listar();
 	}
+	
+	public void limpiar() {
+		this.nombre="";
+		this.apellido="";
+		this.fechainicio=null;
+		this.fechafinal=null;
+	}
 	  
     public void listar()
     {
