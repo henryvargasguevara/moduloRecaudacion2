@@ -131,7 +131,8 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	
 	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException 
 	{
-	Date fechaSeleccionada;
+		
+		Date fechaSeleccionada;
 		   LocalDate ff;
 		   boolean band=true;
 		//String extension="";
@@ -187,13 +188,17 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 	  
 		while ( cellIterator.hasNext()) {	
 			  HSSFCell cell = (HSSFCell) cellIterator.next();
+			  int tipo=cell.getCellType();
+			  if(tipo==Cell.CELL_TYPE_STRING) {
+			 
 			  String valorCelda = cell.getStringCellValue().trim();
-			   //System.out.println(valorCelda);
+			   System.out.println("************"+valorCelda);
 			   //System.out.println(cell.getColumnIndex());
 			   if (!valorCelda.isEmpty()) 
 			    {
 			        mapNombresColumnas.put(valorCelda, cell.getColumnIndex());
 			    }
+			  }
 		}
 		//paso 4.
 		//se asume que los valores para procesar se encuentran en la fila
@@ -336,13 +341,17 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			{	
 				
 				  XSSFCell cell = (XSSFCell) cellIterator.next();
+				  int tipo=cell.getCellType();
+				  if(tipo==Cell.CELL_TYPE_STRING) {
+				 
 				  String valorCelda = cell.getStringCellValue().trim();
-				   //System.out.println("************"+valorCelda);
+				   System.out.println("************"+valorCelda);
 				   //System.out.println(cell.getColumnIndex());
 				   if (!valorCelda.isEmpty()) 
 				    {
 				        mapNombresColumnas.put(valorCelda, cell.getColumnIndex());
 				    }
+				  }
 			}
 			
 		 }
@@ -488,7 +497,12 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			System.out.println("ERRORRRR");
 			System.out.println(e.getMessage()+"****");
 			System.out.println(e.getCause()+"dao.impl");
-		  }	
+		  }
+	
+			   
+			
+	
+			
 		
 		
 		
