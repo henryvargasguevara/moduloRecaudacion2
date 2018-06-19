@@ -129,11 +129,11 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		return lista;
 	}
 	
-	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException {
-		
-		
-			Date fechaSeleccionada;
+	public void mostrarExcel(String extension,String urll) throws IOException, EncryptedDocumentException, InvalidFormatException 
+	{
+	Date fechaSeleccionada;
 		   LocalDate ff;
+		   boolean band=true;
 		//String extension="";
 	    XSSFRow row1;	
 		String nom=null;
@@ -177,7 +177,7 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		FileInputStream fis = new FileInputStream(archivoExcel);
 	    
 		if(extension.equalsIgnoreCase("application/vnd.ms-excel")) 
-		{
+		{band=false;
 		System.out.println("ingreso: "+extension);
 	    HSSFWorkbook workbook = new HSSFWorkbook(fis);
 		HSSFSheet sheet = workbook.getSheetAt(0);
@@ -208,10 +208,13 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		       //el número de columna a leer
 		       //en este caso, solo se imprime el resultado
 		       //puedes reemplazar esto por la manera en que debas procesar la información
-			 
+			  
 			   Persona pers=new Persona();
 			   ff=LocalDate.of(2018,1,1);
-			 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
+			
+			 if(  mapNombresColumnas.get("MONEDA")!=null  ) {  
+				 band=true;
+				 //System.out.println(filaDatos.getCell(mapNombresColumnas.get("MONEDA")).toString());
 			   pers.setUrl(urll);
 			   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
 			   pers.setMoneda(monedaa.substring(0,3));
@@ -295,18 +298,24 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 		       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 		       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
 			   lstPersonas1.add(pers);
+		      }else {
+		    	  band=false;
 		      }
 		    }
 		    workbook.close();
-		    FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
-		 	FacesContext.getCurrentInstance().addMessage(null,msg2);
+		    
+		    
+			  if(band) {
+			  FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
+		 	  FacesContext.getCurrentInstance().addMessage(null,msg2);
+			  }
 		
 		 }
 	  else
-		  { 
+		  { band=false;
 		    if(extension.equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
 		    {   System.out.println("XSSF"+extension);
-		    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+		        XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		    
 			
 			//ubicarse en la hoja donde vas a procesar
@@ -315,29 +324,40 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			//acceder a la fila con los nombres de las columnas
 			Row row = (  sheet).getRow(filaNombresColumnas);
-			//paso 3.
-			//utilizando el poder de Java 8
-
+			 //System.out.println("hasta aquiiiii5");
+			Row row11=sheet.getRow(1);
+			
+		if(row11!=null) 
+		{	
+			System.out.println(row11);
 		    Iterator<Cell> cellIterator = row.cellIterator();
 		  
-			while ( cellIterator.hasNext()) {	
+			while ( cellIterator.hasNext()) 
+			{	
+				
 				  XSSFCell cell = (XSSFCell) cellIterator.next();
 				  String valorCelda = cell.getStringCellValue().trim();
-				   //System.out.println(valorCelda);
+				   //System.out.println("************"+valorCelda);
 				   //System.out.println(cell.getColumnIndex());
 				   if (!valorCelda.isEmpty()) 
 				    {
 				        mapNombresColumnas.put(valorCelda, cell.getColumnIndex());
 				    }
 			}
+			
+		 }
+			
 			//paso 4.
 			//se asume que los valores para procesar se encuentran en la fila
 			//siguiente a la fila donde están los nombres de las columnas
 			int indiceDatos = filaNombresColumnas + 1;
 			Row filaDatos = null;
-	
+		
 			//recorrer todas las filas con datos
+			 
 			while ((filaDatos = ((org.apache.poi.ss.usermodel.Sheet) sheet).getRow(indiceDatos++)) != null) {
+				
+				
 			    //se procesan solo las celdas en base a los "nombres" de esas columnas
 			       //el resultado de mapNombresColumnas.get(col) es
 			       //el número de columna a leer
@@ -346,7 +366,13 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 				 
 				   Persona pers=new Persona();
 				   ff=LocalDate.of(2018, 1, 1);
-				 if(!((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()).equalsIgnoreCase("")) {  
+				   //System.out.println("hasta aquiiiii2");
+			  if(   mapNombresColumnas.get("MONEDA")!=null && mapNombresColumnas.get("DEPENDENCIA")!=null  ) {
+				   band=true;
+				   System.out.println( mapNombresColumnas.get("MONEDA"));
+				   System.out.println( filaDatos.getCell(mapNombresColumnas.get("MONEDA"))  );
+				    
+				   System.out.println(filaDatos.getCell(mapNombresColumnas.get("MONEDA")).toString());
 				   pers.setUrl(urll);
 				   String monedaa=(((filaDatos.getCell(mapNombresColumnas.get("MONEDA"))).toString()) );
 				   pers.setMoneda(monedaa.substring(0,3));
@@ -426,32 +452,49 @@ public class PersonaDAOImpl implements IPersonaDAO,Serializable {
 			       //System.out.println(pers.getId()+"AAA/"+pers.getMoneda()+"/"+pers.getDependencia()+"/"+pers.getConcepto()+"/"+pers.getNumero()+
 			       //   "/"+pers.getCodigo()+"/"+pers.getNombre());	    
 				   lstPersonas1.add(pers);
-			    }
+			    } 
+			     else 
+			        {
+			    	band=false;
+			        }
 			  }
-			  workbook.close();
-			  FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
-		 	  FacesContext.getCurrentInstance().addMessage(null,msg2);
+			  	workbook.close();
+			  
+			  if(band) 
+			  {
+				  FacesMessage msg2=new FacesMessage("Archivo cargado : "+urll);
+				  FacesContext.getCurrentInstance().addMessage(null,msg2);
+			  }
    
 		    }
 		    else{
-		    	FacesMessage msg2=new FacesMessage("Extension no permitida..."+extension);
-		 		FacesContext.getCurrentInstance().addMessage(null,msg2);
+		    	  FacesMessage msg2=new FacesMessage("Extension no permitida..."+extension);
+		 		  FacesContext.getCurrentInstance().addMessage(null,msg2);
 		    	
 		    	}
 		 }//FIN DE ELSE
 		
-	
-		   this.lstPersonas=lstPersonas1;
-		   
-		
-		   
-		}catch(Exception e) {
+		   if(band)
+		     this.lstPersonas=lstPersonas1;
+		   else {
+			   FacesMessage msg5=new FacesMessage("Archivo excel no es correcto");
+	 		   FacesContext.getCurrentInstance().addMessage(null,msg5);
+		   }
+			   
+			   
+		     
+		}catch(Exception e) 
+		  {
 			System.out.println("ERRORRRR");
 			System.out.println(e.getMessage()+"****");
 			System.out.println(e.getCause()+"dao.impl");
-		  }
-
-	  }
+		  }	
+		
+		
+		
+		
+		
+	}
 	
 		@Override
 	public Persona ListarPorId(Persona t) throws Exception {
